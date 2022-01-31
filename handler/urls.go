@@ -30,11 +30,6 @@ type urlListResponse struct {
 	UrlCount int            `json:"url_count"`
 }
 
-type urlStatusRequest struct {
-	FromTime int64 `json:"from_time"`
-	ToTime   int64 `json:"to_time"`
-}
-
 type requestResponse struct {
 	ResultCode int       `json:"result_code"`
 	CreatedAt  time.Time `json:"created_at"`
