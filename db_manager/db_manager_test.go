@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/ShaghayeghFathi/http-monitoring-service/db"
 	"github.com/ShaghayeghFathi/http-monitoring-service/model"
@@ -107,12 +106,9 @@ func TestRequests(t *testing.T) {
 	}
 	reqs, err := st.GetRequestsByUrl(urlsList[0].ID)
 	assert.NoError(t, err, "Error retrieving requests from database")
-	urlsByTime, err := st.GetUserRequestsInPeriod(urlsList[0].ID, time.Now().Add(-time.Minute*3), time.Now())
-	assert.NoError(t, err)
 	reqIDs := make([]uint, 0)
 	for _, req := range reqs {
 		reqIDs = append(reqIDs, req.ID)
 	}
 	assert.Equal(t, 3, len(reqs), "Mismatch between number of inserted and retrieved requests. %v %v", len(reqs), reqIDs)
-	assert.Equal(t, 3, len(urlsByTime.Requests), "error getting urls filtered by time")
 }

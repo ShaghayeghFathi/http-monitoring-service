@@ -1,8 +1,6 @@
 package db_manager
 
 import (
-	"time"
-
 	"github.com/ShaghayeghFathi/http-monitoring-service/model"
 
 	"github.com/jinzhu/gorm"
@@ -94,15 +92,6 @@ func (s *DbManager) GetRequestsByUrl(urlID uint) ([]model.Request, error) {
 		return nil, err
 	}
 	return requests, nil
-}
-
-func (s *DbManager) GetUserRequestsInPeriod(urlID uint, from, to time.Time) (*model.Url, error) {
-	url := &model.Url{}
-	url.ID = urlID
-	if err := s.db.Model(url).Preload("Requests", "created_at >= ? and created_at <= ?", from, to).First(url).Error; err != nil {
-		return nil, err
-	}
-	return url, nil
 }
 
 func (s *DbManager) FetchAlerts(userID uint) ([]*model.Url, error) {

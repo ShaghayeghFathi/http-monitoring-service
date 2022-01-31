@@ -91,14 +91,6 @@ func bindToUrlCreateRequest(c echo.Context) (*urlCreateRequest, error) {
 	return request, nil
 }
 
-func bindToUrlStatusRequest(c echo.Context) (*urlStatusRequest, error) {
-	req := &urlStatusRequest{}
-	if err := c.Bind(req); err != nil {
-		return nil, echo.NewHTTPError(http.StatusBadRequest, "error parsing url status request" , err)
-	}
-	return req, nil
-}
-
 func (h *Handler) FetchURLs(c echo.Context) error {
 	userID := extractID(c)
 	urls, err := h.dm.GetUrlsByUser(userID)
@@ -141,22 +133,11 @@ func (h *Handler) GetURLStats(c echo.Context) error {
 		return 	echo.NewHTTPError(http.StatusBadRequest, "Invalid path parameter" , err)
 
 	}
-
-	req, err := bindToUrlStatusRequest(c)
 	if err != nil {
 		return err
 	}
 	var url *model.Url
-	if req.FromTime != 0 {
-		if req.ToTime == 0 {
-			req.ToTime = time.Now().Unix()
-		}
-		from := time.Unix(req.FromTime, 0)
-		to := time.Unix(req.ToTime, 0)
-		url, err = h.dm.GetUserRequestsInPeriod(uint(urlID), from, to)
-	} else {
-		url, err = h.dm.GetUrlById(uint(urlID))
-	}
+	url, err = h.dm.GetUrlById(uint(urlID))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "error retrieving url stats, invalid url id", err)
 	}
