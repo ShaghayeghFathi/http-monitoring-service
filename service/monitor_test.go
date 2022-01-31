@@ -43,9 +43,9 @@ func TestMonitor_Work(t *testing.T) {
 		{UserId: 2, Address: "http://google.com", Threshold: 10, FailedTimes: 0},
 	}
 	err := st.AddUrl(urls[0])
-	assert.NoError(t, err, "error creating url")
+	assert.NoError(t, err, "error creating first url")
 	err = st.AddUrl(urls[1])
-	assert.NoError(t, err, "error creating url")
+	assert.NoError(t, err, "error creating second url")
 	mnt.AddURL(urls)
 	mnt.Work()
 	req, err := st.GetRequestsByUrl(urls[0].ID)

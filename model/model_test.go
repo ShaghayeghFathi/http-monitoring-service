@@ -11,14 +11,15 @@ func TestPasswordValidation(t *testing.T) {
 	assert.NoError(t, err, "Error creating user")
 	assert.True(t, user.ValidatePassword("Hello"), "Error validating password ")
 }
-func TestHashPassword(t *testing.T) {
-	_, err := HashPassword("")
-	assert.Error(t, err, "error hashing error")
-}
 
 func TestUserCreation(t *testing.T) {
 	_, err := NewUser("", "")
 	assert.Error(t, err, "error creating user, username and password are empty")
+}
+
+func TestHashPassword(t *testing.T) {
+	_, err := HashPassword("")
+	assert.Error(t, err, "error hashing error")
 }
 
 func TestURLCreation(t *testing.T) {

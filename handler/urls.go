@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ShaghayeghFathi/http-monitoring-service/common"
 	"github.com/ShaghayeghFathi/http-monitoring-service/model"
 	"github.com/labstack/echo"
 )
@@ -87,7 +86,7 @@ func newRequestListResponse(reqs []model.Request, url string) *requestListRespon
 func bindToUrlCreateRequest(c echo.Context) (*urlCreateRequest, error) {
 	request := &urlCreateRequest{}
 	if err := c.Bind(request); err != nil {
-		return nil, common.NewRequestError("error binding url create request, check json structure and try again", err, http.StatusBadRequest)
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "error binding url create request" , err)
 	}
 	return request, nil
 }
@@ -95,10 +94,7 @@ func bindToUrlCreateRequest(c echo.Context) (*urlCreateRequest, error) {
 func bindToUrlStatusRequest(c echo.Context) (*urlStatusRequest, error) {
 	req := &urlStatusRequest{}
 	if err := c.Bind(req); err != nil {
-		return nil, common.NewRequestError("error parsing url status request, if you want to specify time, use unix timestamp", err, http.StatusBadRequest)
-	}
-	if req.FromTime > req.ToTime && req.ToTime != 0 {
-		return nil, common.NewRequestError("end of time interval must be later than it's start", nil, http.StatusBadRequest)
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "error parsing url status request" , err)
 	}
 	return req, nil
 }
@@ -107,7 +103,8 @@ func (h *Handler) FetchURLs(c echo.Context) error {
 	userID := extractID(c)
 	urls, err := h.dm.GetUrlsByUser(userID)
 	if err != nil {
-		return common.NewRequestError("Error retrieving urls from database, maybe check your token again", err, http.StatusBadRequest)
+		return 	echo.NewHTTPError(http.StatusBadRequest, "Error retrieving urls from database, check token" , err)
+
 	}
 	resp := newURLListResponse(urls)
 	return c.JSON(http.StatusOK, resp)
@@ -141,7 +138,8 @@ func (h *Handler) GetURLStats(c echo.Context) error {
 	userID := extractID(c)
 	urlID, err := strconv.Atoi(c.Param("urlID"))
 	if err != nil {
-		return common.NewRequestError("Invalid path parameter", err, http.StatusBadRequest)
+		return 	echo.NewHTTPError(http.StatusBadRequest, "Invalid path parameter" , err)
+
 	}
 
 	req, err := bindToUrlStatusRequest(c)

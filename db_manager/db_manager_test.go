@@ -58,7 +58,7 @@ func TestUsers(t *testing.T) {
 	dbUser, err := st.GetUserByUserName("user1")
 	assert.NoError(t, err, "error reading user from database")
 	assert.Equal(t, dbUser.Username, "user1")
-	_, err = st.GetUserByUserName("invalid-username")
+	_, err = st.GetUserByUserName("invalid username")
 	assert.Error(t, err)
 	users, err := st.GetAllUsers()
 	assert.NoError(t, err, "error reading all users from database")
@@ -87,6 +87,8 @@ func TestUrls(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = st.IncrementFailed(u)
+	assert.NoError(t, err, "Error incrementing failed times")
+
 	err = st.IncrementFailed(u)
 	assert.NoError(t, err, "Error incrementing failed times")
 

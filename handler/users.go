@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/ShaghayeghFathi/http-monitoring-service/auth"
-	"github.com/ShaghayeghFathi/http-monitoring-service/common"
 	"github.com/ShaghayeghFathi/http-monitoring-service/model"
 	"github.com/labstack/echo"
 )
@@ -28,7 +27,7 @@ type userAuthRequest struct {
 func bindToAuthRequest(c echo.Context) (*userAuthRequest, error) {
 	authRequest := &userAuthRequest{}
 	if err := c.Bind(authRequest); err != nil {
-		return nil, common.NewRequestError("error binding user request", err, http.StatusBadRequest)
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "error binding user request", err)
 	}
 	return authRequest, nil
 }
